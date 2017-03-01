@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"github.com/mluts/wat-chat/common"
+	"github.com/mluts/chachachat/common"
 	"log"
 	"net/rpc"
 	"os"

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/mluts/wat-chat/common"
+	"github.com/mluts/chachachat/common"
 	"strings"
 	"sync"
 	"time"
