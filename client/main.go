@@ -19,11 +19,15 @@ func poll(client *rpc.Client, handle *common.Handle) {
 	)
 	for {
 		err = client.Call("Chat.Poll", handle, &msg)
+		if shouldExit {
+			return
+		}
+
 		if err != nil && err.Error() == common.ErrTimeout.Error() {
 			continue
 		}
 
-		if err != nil && !shouldExit {
+		if err != nil {
 			log.Print("poll error:", err)
 			os.Exit(1)
 		}
