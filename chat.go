@@ -162,7 +162,6 @@ func (c *Chat) closeStaleConnections() {
 		if conn.stale() {
 			handle := common.Handle(key)
 			c.Logout(handle, &common.Nothing{})
-		} else {
 		}
 	}
 }
