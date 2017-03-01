@@ -234,7 +234,7 @@ func (c *Chat) Write(msg common.Message, out *common.Nothing) error {
 	conn.refresh()
 
 	for _, c := range c.connections {
-		if c.user.username != conn.user.username {
+		if c != conn {
 			go c.write(fmt.Sprintf("%s: %s", conn.user.username, msg.Message))
 		}
 	}
