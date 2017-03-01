@@ -50,13 +50,13 @@ func main() {
 		log.Fatal("rpc dial error:", err)
 	}
 
-	handle := common.Handle(make([]byte, 16))
+	handle := new(common.Handle)
 	err = client.Call("Chat.Login", username, &handle)
 	if err != nil {
 		log.Fatal("login error:", err)
 	}
 
-	go poll(client, &handle)
+	go poll(client, handle)
 	go func() {
 		waitInterrupt()
 		shouldExit = true
@@ -74,7 +74,7 @@ func main() {
 				continue
 			}
 			err = client.Call("Chat.Write", common.Message{
-				handle,
+				*handle,
 				msg,
 			}, &common.Nothing{})
 
