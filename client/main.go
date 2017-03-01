@@ -6,8 +6,11 @@ import (
 	"log"
 	"net/rpc"
 	"os"
+	"os/signal"
 	"strings"
 )
+
+var shouldExit = false
 
 func poll(client *rpc.Client, handle *common.Handle) {
 	var (
@@ -20,13 +23,19 @@ func poll(client *rpc.Client, handle *common.Handle) {
 			continue
 		}
 
-		if err != nil {
+		if err != nil && !shouldExit {
 			log.Print("poll error:", err)
 			os.Exit(1)
 		}
 
 		log.Print(strings.TrimSpace(msg))
 	}
+}
+
+func waitInterrupt() {
+	var sig = make(chan os.Signal)
+	signal.Notify(sig, os.Interrupt)
+	<-sig
 }
 
 func main() {
@@ -48,6 +57,13 @@ func main() {
 	}
 
 	go poll(client, &handle)
+	go func() {
+		waitInterrupt()
+		shouldExit = true
+		log.Print("Exiting...")
+		client.Call("Chat.Logout", handle, &common.Nothing{})
+		os.Exit(0)
+	}()
 
 	for {
 		stdin := bufio.NewReader(os.Stdin)
